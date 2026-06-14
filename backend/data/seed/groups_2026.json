@@ -1,0 +1,17 @@
+{
+  "_source": "FIFA Final Draw, Washington DC, 5 Dec 2025. Names normalised to the martj42 historical dataset spelling; see backend/data/fixtures.py NAME_OVERRIDES.",
+  "groups": {
+    "A": ["Czechia", "Mexico", "South Africa", "South Korea"],
+    "B": ["Bosnia and Herzegovina", "Canada", "Qatar", "Switzerland"],
+    "C": ["Brazil", "Haiti", "Morocco", "Scotland"],
+    "D": ["Australia", "Paraguay", "Turkey", "United States"],
+    "E": ["Curacao", "Ecuador", "Germany", "Ivory Coast"],
+    "F": ["Japan", "Netherlands", "Sweden", "Tunisia"],
+    "G": ["Belgium", "Egypt", "Iran", "New Zealand"],
+    "H": ["Cape Verde", "Saudi Arabia", "Spain", "Uruguay"],
+    "I": ["France", "Iraq", "Norway", "Senegal"],
+    "J": ["Algeria", "Argentina", "Austria", "Jordan"],
+    "K": ["Colombia", "DR Congo", "Portugal", "Uzbekistan"],
+    "L": ["Croatia", "England", "Ghana", "Panama"]
+  }
+}

@@ -1,0 +1,115 @@
+/* ============================================================
+   WC26 Predictor — "Broadcast Dark" theme
+   Stadium-night palette, neon pitch-green, glassmorphism.
+   ============================================================ */
+
+:root {
+  /* Surfaces */
+  --bg-0: #060a08;          /* deepest stadium black-green */
+  --bg-1: #0a120e;
+  --bg-2: #0d1813;
+  --glass: rgba(18, 32, 26, 0.55);
+  --glass-line: rgba(57, 255, 136, 0.14);
+
+  /* Brand */
+  --pitch: #39ff88;         /* neon pitch-green accent */
+  --pitch-dim: #1f6b46;
+  --pitch-glow: rgba(57, 255, 136, 0.35);
+  --danger: #ff5277;        /* upset / away win */
+  --warn: #ffd24a;          /* draw */
+
+  /* Text */
+  --ink: #e8f5ee;
+  --ink-soft: #9db3a8;
+  --ink-faint: #5d756a;
+
+  /* Confederation colours (node tinting) */
+  --c-UEFA: #5ec5ff;
+  --c-CONMEBOL: #ffd24a;
+  --c-CAF: #ff8a4a;
+  --c-CONCACAF: #ff5db0;
+  --c-AFC: #b388ff;
+  --c-OFC: #46e0c8;
+
+  --radius: 14px;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  --font-display: "Anton", "Archivo Expanded", sans-serif;
+  --font-ui: "Archivo", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; margin: 0; }
+
+body {
+  background:
+    radial-gradient(1200px 700px at 78% -10%, rgba(57, 255, 136, 0.10), transparent 60%),
+    radial-gradient(900px 600px at 8% 110%, rgba(94, 197, 255, 0.07), transparent 55%),
+    var(--bg-0);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.01em;
+}
+
+/* Subtle stadium grain/scanline atmosphere */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg, rgba(255, 255, 255, 0.015) 0 1px, transparent 1px 3px
+  );
+  mix-blend-mode: overlay;
+  z-index: 1;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--font-ui); cursor: pointer; }
+
+h1, h2, h3 { margin: 0; line-height: 0.98; }
+
+.display {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-faint);
+  font-weight: 700;
+}
+
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-line);
+  border-radius: var(--radius);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.pitch-text { color: var(--pitch); }
+
+/* Probability bar */
+.prob-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 99px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+}
+.prob-bar > span { display: block; height: 100%; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--pitch-dim); border-radius: 99px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
