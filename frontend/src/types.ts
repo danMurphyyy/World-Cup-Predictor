@@ -74,6 +74,15 @@ export interface SimulationSummary {
   teams: SimTeam[];
 }
 
+export interface H2HMatch {
+  date: string;
+  home: string;
+  away: string;
+  home_score: number;
+  away_score: number;
+  tournament: string;
+}
+
 export interface H2H {
   team_a: string;
   team_b: string;
@@ -81,5 +90,12 @@ export interface H2H {
   a_wins: number;
   draws: number;
   b_wins: number;
+  a_goals: number;
+  b_goals: number;
+  recent: H2HMatch[];
   prediction: Prediction;
+}
+
+export interface TeamDetail extends Team {
+  group_fixtures: Fixture[];
 }

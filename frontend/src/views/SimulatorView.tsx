@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { api } from "../api";
 import { code, pct } from "../lib";
 import type { SimTeam, SimulationSummary } from "../types";
@@ -62,7 +63,7 @@ export default function SimulatorView() {
 
       <div className="odds-list glass">
         {ranked.map((t, i) => (
-          <div key={t.name} className="odds-row">
+          <Link key={t.name} to={`/team/${encodeURIComponent(t.name)}`} className="odds-row">
             <span className="odds-rank">{i + 1}</span>
             <span className="odds-code">{code(t.name)}</span>
             <span className="odds-name">{t.name}</span>
@@ -70,7 +71,7 @@ export default function SimulatorView() {
               <div className="odds-fill" style={{ width: `${t[metric] * 100}%` }} />
             </div>
             <span className="odds-pct display">{pct(t[metric], 1)}</span>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

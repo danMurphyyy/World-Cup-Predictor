@@ -2,11 +2,14 @@ import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import GraphView from "./views/GraphView";
 import FixturesView from "./views/FixturesView";
 import SimulatorView from "./views/SimulatorView";
+import HeadToHeadView from "./views/HeadToHeadView";
+import TeamProfileView from "./views/TeamProfileView";
 
 const LINKS = [
   { to: "/graph", label: "Graph" },
   { to: "/fixtures", label: "Fixtures" },
   { to: "/simulator", label: "Simulator" },
+  { to: "/compare", label: "Compare" },
 ];
 
 export default function App() {
@@ -36,6 +39,8 @@ export default function App() {
           <Route path="/graph" element={<GraphView />} />
           <Route path="/fixtures" element={<FixturesView />} />
           <Route path="/simulator" element={<SimulatorView />} />
+          <Route path="/compare" element={<HeadToHeadView />} />
+          <Route path="/team/:name" element={<TeamProfileView />} />
         </Routes>
       </main>
 

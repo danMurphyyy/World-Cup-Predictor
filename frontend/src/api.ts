@@ -1,4 +1,4 @@
-import type { Fixture, GraphData, H2H, Prediction, SimulationSummary, Team } from "./types";
+import type { Fixture, GraphData, H2H, Prediction, SimulationSummary, Team, TeamDetail } from "./types";
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`/api${path}`);
@@ -22,4 +22,5 @@ export const api = {
   simulate: () => get<SimulationSummary>("/simulate"),
   h2h: (a: string, b: string) =>
     get<H2H>(`/h2h?a=${encodeURIComponent(a)}&b=${encodeURIComponent(b)}`),
+  team: (name: string) => get<TeamDetail>(`/team/${encodeURIComponent(name)}`),
 };
