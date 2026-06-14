@@ -1,7 +1,10 @@
 import type { Fixture, GraphData, H2H, Prediction, SimulationSummary, Team, TeamDetail } from "./types";
 
+// Empty in dev (Vite proxies /api); set to the backend URL at build time in prod.
+const BASE = import.meta.env.VITE_API_BASE ?? "";
+
 async function get<T>(path: string): Promise<T> {
-  const res = await fetch(`/api${path}`);
+  const res = await fetch(`${BASE}/api${path}`);
   if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${path}`);
   return res.json() as Promise<T>;
 }

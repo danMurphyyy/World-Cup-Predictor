@@ -1,6 +1,8 @@
 """FastAPI application exposing predictions, the relationship graph, and the sim."""
 from __future__ import annotations
 
+import os
+
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,9 +11,11 @@ from backend.model.strength import get_models
 
 app = FastAPI(title="World Cup Predictor API", version="1.0")
 
+# Public read-only API. CORS_ORIGINS env (comma-separated) overrides; default "*".
+_origins = os.environ.get("CORS_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=[o.strip() for o in _origins],
     allow_methods=["*"],
     allow_headers=["*"],
 )
