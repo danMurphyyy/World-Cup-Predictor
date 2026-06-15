@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import GraphView from "./views/GraphView";
 import FixturesView from "./views/FixturesView";
@@ -15,6 +16,7 @@ const LINKS = [
 ];
 
 export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <div className="app">
       <header className="topbar">
@@ -24,9 +26,22 @@ export default function App() {
             <span className="display brand-mark">WC<span className="pitch-text">26</span></span>
             <span className="brand-sub">Predictor</span>
           </div>
-          <nav className="nav">
+          <button
+            className={`hamburger ${menuOpen ? "open" : ""}`}
+            aria-label="Toggle navigation"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span /><span /><span />
+          </button>
+          <nav className={`nav ${menuOpen ? "open" : ""}`}>
             {LINKS.map((l) => (
-              <NavLink key={l.to} to={l.to} className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+              <NavLink
+                key={l.to}
+                to={l.to}
+                className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+                onClick={() => setMenuOpen(false)}
+              >
                 {l.label}
               </NavLink>
             ))}
