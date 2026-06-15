@@ -22,14 +22,9 @@ stylish, broadcast-themed React frontend built around an interactive
 
 ## Screenshots
 
-> **To add:** drop `graph.png`, `simulator.png`, and `head-to-head.png` into
-> `docs/screenshots/`, then delete this note and uncomment the grid below.
-
-<!-- Uncomment once the PNGs are added:
 | Relationship graph | Simulator | Head-to-head |
 |---|---|---|
 | ![Graph](docs/screenshots/graph.png) | ![Simulator](docs/screenshots/simulator.png) | ![Head-to-head](docs/screenshots/head-to-head.png) |
--->
 
 
 ## What it does
