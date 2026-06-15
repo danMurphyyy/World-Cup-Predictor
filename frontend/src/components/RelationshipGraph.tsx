@@ -43,15 +43,18 @@ export default function RelationshipGraph({
   );
 
   const maxOdds = Math.max(0.01, ...data.nodes.map((n) => n.title_odds));
-  const radius = (n: any) => 5 + (n.title_odds / maxOdds) * 13;
+  // ~3x larger than before so the team code sits comfortably inside the circle.
+  const radius = (n: any) => 15 + (n.title_odds / maxOdds) * 30;
+  const fitted = useRef(false);
 
   // Spread the nodes out: collision (no overlap), stronger repulsion, link length.
   useEffect(() => {
     const g = fg.current;
     if (!g) return;
-    g.d3Force("collide", forceCollide((n: any) => radius(n) + 4));
-    g.d3Force("charge")?.strength(-160);
-    g.d3Force("link")?.distance(70);
+    g.d3Force("collide", forceCollide((n: any) => radius(n) + 6));
+    g.d3Force("charge")?.strength(-260);
+    g.d3Force("link")?.distance(110);
+    fitted.current = false; // re-fit the view once this layout settles
     g.d3ReheatSimulation?.();
   }, [graphData]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -64,6 +67,9 @@ export default function RelationshipGraph({
         graphData={graphData}
         cooldownTicks={200}
         d3VelocityDecay={0.3}
+        onEngineStop={() => {
+          if (!fitted.current) { fg.current?.zoomToFit?.(400, 50); fitted.current = true; }
+        }}
         backgroundColor="rgba(0,0,0,0)"
         nodeRelSize={1}
         linkCurvature={0.18}
@@ -109,7 +115,7 @@ export default function RelationshipGraph({
           ctx.stroke();
           ctx.shadowBlur = 0;
 
-          const fontSize = Math.max(8, r * 0.8);
+          const fontSize = r * 0.62; // keeps the 3-letter code inside the circle
           ctx.font = `700 ${fontSize}px Archivo, sans-serif`;
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
