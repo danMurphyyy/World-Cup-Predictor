@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ForceGraph2D from "react-force-graph-2d";
+import { forceCollide } from "d3-force";
 import { confedColor, code } from "../lib";
 import type { GraphData, GraphEdge } from "../types";
 
@@ -19,6 +20,7 @@ export default function RelationshipGraph({
   data, onSelectEdge, onSelectNode, selectedEdgeKey, pendingNode,
 }: Props) {
   const wrap = useRef<HTMLDivElement>(null);
+  const fg = useRef<any>(null);
   const [dims, setDims] = useState({ w: 800, h: 560 });
   const [hoverNode, setHoverNode] = useState<string | null>(null);
 
@@ -41,14 +43,27 @@ export default function RelationshipGraph({
   );
 
   const maxOdds = Math.max(0.01, ...data.nodes.map((n) => n.title_odds));
+  const radius = (n: any) => 5 + (n.title_odds / maxOdds) * 13;
+
+  // Spread the nodes out: collision (no overlap), stronger repulsion, link length.
+  useEffect(() => {
+    const g = fg.current;
+    if (!g) return;
+    g.d3Force("collide", forceCollide((n: any) => radius(n) + 4));
+    g.d3Force("charge")?.strength(-160);
+    g.d3Force("link")?.distance(70);
+    g.d3ReheatSimulation?.();
+  }, [graphData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div ref={wrap} className="graph-canvas">
       <ForceGraph2D
+        ref={fg}
         width={dims.w}
         height={dims.h}
         graphData={graphData}
-        cooldownTicks={120}
+        cooldownTicks={200}
+        d3VelocityDecay={0.3}
         backgroundColor="rgba(0,0,0,0)"
         nodeRelSize={1}
         linkCurvature={0.18}
@@ -80,7 +95,7 @@ export default function RelationshipGraph({
         }
         onBackgroundClick={() => onSelectEdge(null)}
         nodeCanvasObject={(node: any, ctx, scale) => {
-          const r = 5 + (node.title_odds / maxOdds) * 13;
+          const r = radius(node);
           const color = confedColor(node.confederation);
           const active = node.id === hoverNode || node.id === pendingNode;
 
@@ -103,7 +118,7 @@ export default function RelationshipGraph({
           void scale;
         }}
         nodePointerAreaPaint={(node: any, color, ctx) => {
-          const r = 5 + (node.title_odds / maxOdds) * 13;
+          const r = radius(node);
           ctx.fillStyle = color;
           ctx.beginPath();
           ctx.arc(node.x, node.y, r + 2, 0, 2 * Math.PI);
