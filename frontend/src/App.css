@@ -222,6 +222,9 @@
 .team-select:focus { outline: none; border-color: var(--pitch); }
 .h2h-vs { color: var(--ink-faint); font-size: 18px; }
 
+.story { padding: 16px 20px; margin-bottom: 18px; border-left: 3px solid var(--pitch); }
+.story-text { margin: 8px 0 0; font-size: 15px; line-height: 1.55; color: var(--ink); }
+
 .h2h-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .side { text-decoration: none; }
 

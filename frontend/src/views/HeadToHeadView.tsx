@@ -3,7 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import ProbBar from "../components/ProbBar";
 import { api } from "../api";
 import { code } from "../lib";
-import type { H2H, Team } from "../types";
+import type { H2H, Preview, Team } from "../types";
 
 export default function HeadToHeadView() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -11,15 +11,18 @@ export default function HeadToHeadView() {
   const a = params.get("a") ?? "Brazil";
   const b = params.get("b") ?? "Argentina";
   const [h2h, setH2h] = useState<H2H | null>(null);
+  const [preview, setPreview] = useState<Preview | null>(null);
 
   useEffect(() => {
     api.teams().then((t) => setTeams([...t].sort((x, y) => x.name.localeCompare(y.name))));
   }, []);
 
   useEffect(() => {
-    if (a === b) { setH2h(null); return; }
+    if (a === b) { setH2h(null); setPreview(null); return; }
     setH2h(null);
+    setPreview(null);
     api.h2h(a, b).then(setH2h);
+    api.preview(a, b).then(setPreview);
   }, [a, b]);
 
   const setTeam = (slot: "a" | "b", value: string) => {
@@ -45,6 +48,13 @@ export default function HeadToHeadView() {
         <span className="h2h-vs display">vs</span>
         <TeamSelect teams={teams} value={b} onChange={(v) => setTeam("b", v)} />
       </div>
+
+      {a !== b && preview && (
+        <div className="story glass">
+          <span className="label">The numbers say</span>
+          <p className="story-text">{preview.preview}</p>
+        </div>
+      )}
 
       {a === b ? (
         <div className="loading">Pick two different teams.</div>

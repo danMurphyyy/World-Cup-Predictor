@@ -11,6 +11,7 @@ from functools import lru_cache
 from backend.data.fixtures import CONFEDERATION, group_fixtures, group_of, load_groups
 from backend.data.store import head_to_head, head_to_head_summary
 from backend.model.blend import predict_blended
+from backend.model.preview import generate_preview
 from backend.model.simulate import get_simulation
 from backend.model.strength import get_models
 
@@ -132,6 +133,14 @@ def h2h_detail(team_a: str, team_b: str, limit: int = 10) -> dict:
     ]
     summary["prediction"] = predict_match(team_a, team_b, neutral=True)
     return summary
+
+
+def match_preview(home: str, away: str) -> dict:
+    """Data-driven match narrative built locally from the model's numbers."""
+    elo, dc = get_models()
+    pred = predict_blended(elo, dc, home, away, neutral=True)
+    h2h = head_to_head_summary(home, away)
+    return {"home": home, "away": away, "preview": generate_preview(pred, h2h, home, away)}
 
 
 def simulation_summary() -> dict:

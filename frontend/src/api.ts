@@ -1,4 +1,4 @@
-import type { Fixture, GraphData, H2H, Prediction, Scoreboard, SimulationSummary, Team, TeamDetail } from "./types";
+import type { Fixture, GraphData, H2H, Prediction, Preview, Scoreboard, SimulationSummary, Team, TeamDetail } from "./types";
 
 // Empty in dev (Vite proxies /api); set to the backend URL at build time in prod.
 const BASE = import.meta.env.VITE_API_BASE ?? "";
@@ -27,4 +27,6 @@ export const api = {
     get<H2H>(`/h2h?a=${encodeURIComponent(a)}&b=${encodeURIComponent(b)}`),
   team: (name: string) => get<TeamDetail>(`/team/${encodeURIComponent(name)}`),
   scoreboard: () => get<Scoreboard>("/scoreboard"),
+  preview: (home: string, away: string) =>
+    get<Preview>(`/preview?home=${encodeURIComponent(home)}&away=${encodeURIComponent(away)}`),
 };

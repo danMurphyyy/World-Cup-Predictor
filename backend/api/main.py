@@ -77,6 +77,13 @@ def h2h(a: str, b: str) -> dict:
     return services.h2h_detail(a, b)
 
 
+@app.get("/api/preview")
+def preview(home: str, away: str) -> dict:
+    _require_team(home)
+    _require_team(away)
+    return services.match_preview(home, away)
+
+
 @app.get("/api/team/{name}")
 def team(name: str) -> dict:
     _require_team(name)

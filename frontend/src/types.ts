@@ -116,6 +116,12 @@ export interface ScoreMatch {
   hit: boolean;
 }
 
+export interface Preview {
+  home: string;
+  away: string;
+  preview: string;
+}
+
 export interface Scoreboard {
   n: number;
   tournament_start: string | null;

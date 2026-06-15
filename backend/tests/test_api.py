@@ -73,6 +73,11 @@ def test_h2h_has_record_and_prediction():
     assert "prediction" in r and len(r["recent"]) > 0
 
 
+def test_preview_returns_text():
+    r = client.get("/api/preview", params={"home": "Brazil", "away": "Argentina"}).json()
+    assert isinstance(r["preview"], str) and len(r["preview"]) > 0
+
+
 def test_team_profile_has_three_group_fixtures():
     r = client.get("/api/team/Brazil").json()
     assert r["name"] == "Brazil"
