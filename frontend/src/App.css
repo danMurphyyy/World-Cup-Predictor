@@ -235,6 +235,30 @@
 .recent-score { font-weight: 700; }
 .recent-comp { color: var(--ink-faint); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* ===================== Scoreboard ===================== */
+.sb-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
+.sb-card { padding: 20px 22px; display: flex; flex-direction: column; gap: 6px; }
+.sb-card.sb-lead { border-color: var(--pitch); box-shadow: 0 0 34px rgba(57,255,136,0.14); }
+.sb-value { font-size: 34px; }
+.sb-vs { font-size: 16px; color: var(--ink-faint); }
+
+.sb-feed { display: flex; flex-direction: column; gap: 10px; }
+.sb-row {
+  display: grid; grid-template-columns: 96px 1.4fr 1.6fr 1.4fr; gap: 16px; align-items: center;
+  padding: 12px 18px; border-left: 3px solid transparent;
+}
+.sb-row.hit { border-left-color: var(--pitch); }
+.sb-row.miss { border-left-color: var(--danger); }
+.sb-date { font-size: 12px; color: var(--ink-faint); }
+.sb-result { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; font-weight: 800; }
+.sb-result .sb-team.right { text-align: right; }
+.sb-score { font-size: 18px; text-align: center; }
+.sb-bar { height: 8px; }
+.sb-call { font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.sb-badge { width: 20px; height: 20px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 11px; font-weight: 800; }
+.sb-badge.ok { background: rgba(57,255,136,0.18); color: var(--pitch); }
+.sb-badge.x { background: rgba(255,82,119,0.18); color: var(--danger); }
+
 /* ===================== Responsive ===================== */
 @media (min-width: 1100px) { .topbar-tag { display: block; } }
 
@@ -261,4 +285,7 @@
   .outlook-row { grid-template-columns: 110px 1fr auto; }
   .recent-comp { display: none; }
   .recent-row { grid-template-columns: 80px 1fr; }
+  .sb-cards { grid-template-columns: 1fr; }
+  .sb-row { grid-template-columns: 1fr auto; row-gap: 8px; }
+  .sb-bar, .sb-date { grid-column: 1 / -1; }
 }

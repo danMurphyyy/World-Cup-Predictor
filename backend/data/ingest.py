@@ -6,7 +6,9 @@ the dependable backbone for ratings, strengths and head-to-head edges.
 """
 from __future__ import annotations
 
+import time
 from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 import requests
@@ -28,12 +30,17 @@ EXPECTED_COLUMNS = {
 }
 
 
-def download_results(force: bool = False) -> Path:
+def download_results(force: bool = False, max_age_hours: Optional[float] = None) -> Path:
     """Download the historical results CSV to the cache, returning its path.
 
-    Skips the network call if a cached copy already exists, unless ``force``.
+    Uses the cached copy unless ``force``, or unless it is older than
+    ``max_age_hours`` (used so the live scoreboard picks up new results).
     """
-    if RESULTS_CACHE.exists() and not force:
+    fresh = RESULTS_CACHE.exists()
+    if fresh and max_age_hours is not None:
+        age_h = (time.time() - RESULTS_CACHE.stat().st_mtime) / 3600
+        fresh = age_h < max_age_hours
+    if fresh and not force:
         return RESULTS_CACHE
 
     resp = requests.get(HISTORICAL_RESULTS_URL, timeout=60)
@@ -42,9 +49,10 @@ def download_results(force: bool = False) -> Path:
     return RESULTS_CACHE
 
 
-def load_results(force_download: bool = False) -> pd.DataFrame:
+def load_results(force_download: bool = False,
+                 max_age_hours: Optional[float] = None) -> pd.DataFrame:
     """Load and clean the historical results into a typed DataFrame."""
-    path = download_results(force=force_download)
+    path = download_results(force=force_download, max_age_hours=max_age_hours)
     df = pd.read_csv(path, parse_dates=["date"])
 
     missing = EXPECTED_COLUMNS - set(df.columns)

@@ -99,3 +99,30 @@ export interface H2H {
 export interface TeamDetail extends Team {
   group_fixtures: Fixture[];
 }
+
+export interface ScoreMatch {
+  date: string;
+  home: string;
+  away: string;
+  home_score: number;
+  away_score: number;
+  outcome: string;
+  prob_home: number;
+  prob_draw: number;
+  prob_away: number;
+  xg_home: number;
+  xg_away: number;
+  prob_actual: number;
+  hit: boolean;
+}
+
+export interface Scoreboard {
+  n: number;
+  tournament_start: string | null;
+  model_log_loss: number | null;
+  baseline_log_loss: number | null;
+  model_brier: number | null;
+  baseline_brier: number | null;
+  pick_accuracy: number | null;
+  matches: ScoreMatch[];
+}

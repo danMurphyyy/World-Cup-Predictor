@@ -4,11 +4,13 @@ import FixturesView from "./views/FixturesView";
 import SimulatorView from "./views/SimulatorView";
 import HeadToHeadView from "./views/HeadToHeadView";
 import TeamProfileView from "./views/TeamProfileView";
+import ScoreboardView from "./views/ScoreboardView";
 
 const LINKS = [
   { to: "/graph", label: "Graph" },
   { to: "/fixtures", label: "Fixtures" },
   { to: "/simulator", label: "Simulator" },
+  { to: "/scoreboard", label: "Scoreboard" },
   { to: "/compare", label: "Compare" },
 ];
 
@@ -39,6 +41,7 @@ export default function App() {
           <Route path="/graph" element={<GraphView />} />
           <Route path="/fixtures" element={<FixturesView />} />
           <Route path="/simulator" element={<SimulatorView />} />
+          <Route path="/scoreboard" element={<ScoreboardView />} />
           <Route path="/compare" element={<HeadToHeadView />} />
           <Route path="/team/:name" element={<TeamProfileView />} />
         </Routes>

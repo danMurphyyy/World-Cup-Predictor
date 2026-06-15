@@ -57,6 +57,16 @@ def test_simulate_distribution():
     assert sum(t["title_odds"] for t in sim["teams"]) == pytest.approx(1.0, abs=1e-6)
 
 
+def test_scoreboard_scores_played_matches():
+    sb = client.get("/api/scoreboard").json()
+    assert sb["n"] > 0
+    for key in ("model_log_loss", "baseline_log_loss", "pick_accuracy", "matches"):
+        assert key in sb
+    m = sb["matches"][0]
+    assert 0 <= m["prob_actual"] <= 1
+    assert "hit" in m
+
+
 def test_h2h_has_record_and_prediction():
     r = client.get("/api/h2h", params={"a": "Brazil", "b": "Argentina"}).json()
     assert r["played"] > 0

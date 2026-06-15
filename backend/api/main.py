@@ -64,6 +64,12 @@ def simulate() -> dict:
     return services.simulation_summary()
 
 
+@app.get("/api/scoreboard")
+def scoreboard() -> dict:
+    from backend.model.scoreboard import build_scoreboard
+    return build_scoreboard()
+
+
 @app.get("/api/h2h")
 def h2h(a: str, b: str) -> dict:
     _require_team(a)
