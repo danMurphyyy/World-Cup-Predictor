@@ -1,23 +1,47 @@
 # ⚽ WC26 Predictor
 
-A full-stack World Cup 2026 prediction app: a **Dixon–Coles** goal model + **Elo**
-ratings, fit on **49,413 international matches (1872–2026)**, feeding a
-**Monte-Carlo tournament simulation** and a stylish, broadcast-themed React
-frontend built around an interactive **team-relationship graph**.
+**Predicting the 2026 World Cup from 154 years of match data.** A full-stack app
+pairing an explainable football model — **Dixon–Coles** goals + **Elo**,
+calibrated on a back-test — with a **Monte-Carlo tournament simulation** and a
+stylish, broadcast-themed React frontend built around an interactive
+**team-relationship graph**.
 
-> The 2026 World Cup is live as this is built, so predictions can be scored
+### 🔴 [**Live demo → wc26-predictor-eyat.onrender.com**](https://wc26-predictor-eyat.onrender.com)
+
+![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-31%20passing-39ff88)
+
+> The 2026 World Cup is live as this was built, so predictions can be scored
 > against real results.
+>
+> *Free-tier note: the API sleeps after ~15 min idle, so the first load may take
+> ~40s to wake up.*
+
+## Screenshots
+
+> **To add:** drop `graph.png`, `simulator.png`, and `head-to-head.png` into
+> `docs/screenshots/`, then delete this note and uncomment the grid below.
+
+<!-- Uncomment once the PNGs are added:
+| Relationship graph | Simulator | Head-to-head |
+|---|---|---|
+| ![Graph](docs/screenshots/graph.png) | ![Simulator](docs/screenshots/simulator.png) | ![Head-to-head](docs/screenshots/head-to-head.png) |
+-->
+
 
 ## What it does
 
 - **Relationship graph** — all 48 teams as a force-directed map (sized by title
-  odds, coloured by confederation). Switch edge modes: group matchups, or the
-  most-likely knockout meetings (cross-group, from the simulation). Click any two
-  teams to predict *any* hypothetical fixture.
+  odds, coloured by confederation). Switch edge modes — group matchups, or the
+  most-likely knockout meetings (from the simulation) — or click any two teams to
+  predict *any* hypothetical fixture, group rival or dream final.
 - **Fixtures** — every group-stage match with expected goals and W/D/L bars.
 - **Simulator** — 10,000 simulated tournaments → title / final / semi / QF odds.
-- **Filters** — by group and confederation (structural). More planned (temporal,
-  squad-level) — see the design spec.
+- **Team profiles & head-to-head** — per-team strength and outlook; compare any
+  two nations' predicted matchup and full historical record.
 
 ## The model
 
@@ -28,24 +52,31 @@ frontend built around an interactive **team-relationship graph**.
 | **Elo blend** (`backend/model/blend.py`) | Blends each match's goal supremacy from DC with Elo's — Elo corrects DC's bias toward high-scoring CONMEBOL qualifiers. |
 | **Monte-Carlo** (`backend/model/simulate.py`) | Plays out the full 48-team format (groups → 32-team knockout) thousands of times for advancement + title odds. |
 
-All model logic is **test-driven** (`backend/tests`, run `pytest`): probabilities
-sum to 1, synthetic parameter recovery, monotonicity, API contracts. 31 tests.
+All model logic is **test-driven** (`backend/tests`): probability coherence,
+synthetic parameter recovery, monotonicity, and API contracts. 31 tests.
 
 ### Calibration (back-test)
 
-The Elo blend weight was chosen by a **temporal back-test**
+The blend weight was chosen by a **temporal back-test**
 (`backend/model/backtest.py`): fit on matches before 2023, score W/D/L
 predictions on 2023–2026 by log-loss. Blending Elo (w=0.5) beats Dixon–Coles
 alone — **0.864 vs 0.871 log-loss** over 3,597 held-out matches — and fixes the
-headline symptom (England/France now correctly rank above Ecuador/Uruguay).
+headline symptom (England/France correctly rank above Ecuador/Uruguay in title
+odds).
 
-## Stack
+## Architecture
+
+```
+backend/   FastAPI · data pipeline → Elo + Dixon–Coles + Elo blend → Monte-Carlo sim
+frontend/  React + Vite + TypeScript · "Broadcast Dark" theme · react-force-graph
+```
 
 - **Backend:** Python · FastAPI · pandas · NumPy · SciPy
 - **Frontend:** React · Vite · TypeScript · `react-force-graph-2d`
-- **Data:** [martj42/international_results](https://github.com/martj42/international_results) (CC0)
+- **Data:** [martj42/international_results](https://github.com/martj42/international_results) (CC0) — 49,413 internationals, 1872–2026
+- **Hosting:** Render (web service + static site)
 
-## Run it
+## Run it locally
 
 ```bash
 # Backend (from repo root)
