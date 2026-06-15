@@ -16,6 +16,7 @@ import numpy as np
 from backend.config import CACHE_DIR, HOST_NATIONS
 from backend.data.fixtures import load_groups
 from backend.model.blend import blend_expected_goals
+from backend.model.confed import confed_adjust
 from backend.model.dixon_coles import DixonColesModel
 from backend.model.elo import HOME_ADVANTAGE, EloModel
 from backend.model.strength import get_models
@@ -64,18 +65,18 @@ def _seed_order(n: int) -> list[int]:
 # --- Match sampling -------------------------------------------------------------
 
 def _expected_goals(elo: EloModel, dc: DixonColesModel, a: str, b: str) -> tuple[float, float]:
-    """Elo-blended expected goals (a, b), with host nations getting home advantage."""
+    """Elo-blended, confederation-adjusted expected goals (a, b); host = home adv."""
     a_host, b_host = a in HOST_NATIONS, b in HOST_NATIONS
     if a_host and not b_host:
         lh0, la0 = dc.expected_goals(a, b, neutral=False)
-        ediff = elo.rating(a) - elo.rating(b) + HOME_ADVANTAGE
-        return blend_expected_goals(lh0, la0, ediff)
-    if b_host and not a_host:
+        ea, eb = blend_expected_goals(lh0, la0, elo.rating(a) - elo.rating(b) + HOME_ADVANTAGE)
+    elif b_host and not a_host:
         lh0, la0 = dc.expected_goals(b, a, neutral=False)
         eb, ea = blend_expected_goals(lh0, la0, elo.rating(b) - elo.rating(a) + HOME_ADVANTAGE)
-        return ea, eb
-    lh0, la0 = dc.expected_goals(a, b, neutral=True)
-    return blend_expected_goals(lh0, la0, elo.rating(a) - elo.rating(b))
+    else:
+        lh0, la0 = dc.expected_goals(a, b, neutral=True)
+        ea, eb = blend_expected_goals(lh0, la0, elo.rating(a) - elo.rating(b))
+    return confed_adjust(ea, eb, a, b)
 
 
 def _sample_goals(elo, dc, a, b, rng) -> tuple[int, int]:

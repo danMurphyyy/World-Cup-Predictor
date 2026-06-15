@@ -40,6 +40,8 @@ def predict_blended(elo: EloModel, dc: DixonColesModel, home: str, away: str,
         from backend.model.elo import HOME_ADVANTAGE
         elo_diff += HOME_ADVANTAGE
     lam_h, lam_a = blend_expected_goals(lam_h0, lam_a0, elo_diff, w, goal_scale)
+    from backend.model.confed import confed_adjust  # lazy: avoid import cycle
+    lam_h, lam_a = confed_adjust(lam_h, lam_a, home, away)
     matrix = scoreline_matrix(lam_h, lam_a, dc.rho, max_goals)
     p_home, p_draw, p_away = outcome_probabilities(matrix)
     return {

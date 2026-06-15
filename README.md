@@ -50,19 +50,25 @@ stylish, broadcast-themed React frontend built around an interactive
 | **Elo** (`backend/model/elo.py`) | World-Football-Elo over all history; margin-of-victory + tournament weighting. Calibrated across confederations. |
 | **Dixon–Coles** (`backend/model/dixon_coles.py`) | Bivariate-Poisson attack/defence strengths via weighted MLE with recency decay + low-score correction → full scoreline distribution. |
 | **Elo blend** (`backend/model/blend.py`) | Blends each match's goal supremacy from DC with Elo's — Elo corrects DC's bias toward high-scoring CONMEBOL qualifiers. |
+| **Confederation calibration** (`backend/model/confed.py`) | Corrects residual cross-confederation bias — a fitted per-confederation goal-supremacy offset applied when teams from different confederations meet. |
 | **Monte-Carlo** (`backend/model/simulate.py`) | Plays out the full 48-team format (groups → 32-team knockout) thousands of times for advancement + title odds. |
 
 All model logic is **test-driven** (`backend/tests`): probability coherence,
-synthetic parameter recovery, monotonicity, and API contracts. 31 tests.
+synthetic parameter recovery, monotonicity, and API contracts. 46 tests.
 
-### Calibration (back-test)
+### Calibration (back-tested)
 
-The blend weight was chosen by a **temporal back-test**
-(`backend/model/backtest.py`): fit on matches before 2023, score W/D/L
-predictions on 2023–2026 by log-loss. Blending Elo (w=0.5) beats Dixon–Coles
-alone — **0.864 vs 0.871 log-loss** over 3,597 held-out matches — and fixes the
-headline symptom (England/France correctly rank above Ecuador/Uruguay in title
-odds).
+Two evidence-based corrections, each validated on held-out data:
+
+1. **Elo blend weight** (`backend/model/backtest.py`) — temporal back-test (fit
+   pre-2023, score 2023–2026 by log-loss) picks w=0.5, beating Dixon–Coles alone
+   **0.864 vs 0.871** over 3,597 matches.
+2. **Confederation offsets** (`backend/model/confed.py`) — the blended model still
+   over-rated CONMEBOL/AFC and under-rated UEFA/CAF on cross-confederation
+   matches. Per-confederation offsets fit by MLE close those gaps (e.g. UEFA
+   prediction error +0.18 → +0.01 pts/game) and improve held-out 2023+
+   cross-confederation log-loss **0.912 → 0.898**. The result: a bookmaker-aligned
+   title race (Spain, Argentina, France, England) rather than a CONMEBOL-heavy one.
 
 ## Architecture
 
