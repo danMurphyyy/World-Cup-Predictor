@@ -1,0 +1,17 @@
+name: keep-warm
+
+# Pings the Render free-tier backend so it doesn't spin down (15-min idle).
+# Keeps the live demo responsive while the project is being shared.
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # every ~10 minutes (GitHub may add some delay)
+  workflow_dispatch: {}        # allow manual runs
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake the API
+        run: |
+          curl -fsS --max-time 90 https://wc26-predictor-api.onrender.com/api/health || true
+          curl -fsS --max-time 90 https://wc26-predictor-api.onrender.com/api/simulate -o /dev/null || true
